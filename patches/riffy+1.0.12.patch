@@ -1,0 +1,23 @@
+diff --git a/node_modules/riffy/build/structures/Player.js b/node_modules/riffy/build/structures/Player.js
+index c0b68a1..f524ca0 100644
+--- a/node_modules/riffy/build/structures/Player.js
++++ b/node_modules/riffy/build/structures/Player.js
+@@ -472,6 +472,16 @@ class Player extends EventEmitter {
+             case "WebSocketClosedEvent":
+                 this.socketClosed(player, payload);
+                 break;
++
++            case "PlayerCreatedEvent":
++            case "PlayerConnectedEvent":
++            case "PlayerDestroyedEvent":
++            case "PlayerDisconnectedEvent":
++            case "VolumeChangedEvent":
++            case "FiltersChangedEvent":
++            case "TrackUpdateEvent":
++            case "QueueEvent":
++                this.riffy.emit("debug", `[Player ${this.guildId}] Ignored event: ${payload.type}`);
++                break;
++
+             default:
+                 const error = new Error(`Node encountered an unknown event: '${payload.type}'`);
+                 this.riffy.emit("nodeError", this, error);

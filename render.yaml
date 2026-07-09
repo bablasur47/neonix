@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: neonix
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: TOKEN
+        sync: false
+      - key: CLIENT_ID
+        sync: false
+      - key: CLIENT_SECRET
+        sync: false
+      - key: OWNER_ID
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: DASHBOARD_URL
+        value: https://neonix.onrender.com
+      - key: WEBHOOK_URL
+        sync: false
+      - key: PORT
+        value: "5000"

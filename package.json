@@ -1,0 +1,20 @@
+{
+  "name": "neonix",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "bun index.js",
+    "dev": "bun --watch index.js",
+    "postinstall": "bun scripts/patch-riffy.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "mongodb": "^6.14.0",
+    "musicard": "^3.0.1",
+    "riffy": "^1.0.12"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0"
+  }
+}

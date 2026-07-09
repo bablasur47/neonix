@@ -1,0 +1,108 @@
+==> Downloading cache...
+==> Cloning from https://github.com/bablasur47/music
+==> Checking out commit 806c9f5ca289ab92ed896c828d0b0c6fbdcb949d in branch main
+==> Downloaded 40MB in 2s. Extraction took 1s.
+==> Using Node.js version 24.14.1 (default)
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Using Bun version 1.3.6 via /opt/render/project/src/.bun-version
+==> Docs on specifying a Bun version: https://render.com/docs/bun-version
+==> Installing Bun version 1.3.6...
+==> Running build command 'bun install --no-cache'...
+bun install v1.3.6 (d530ed99)
+Resolving dependencies
+Resolved, downloaded and extracted [172]
+Saved lockfile
+$ bun scripts/patch-riffy.js
+[PATCH] Lavalink v4 event patch already applied
+[PATCH] trackEnd patch already applied
+[PATCH] play() patch already applied
+[PATCH] Done
+Checked 80 installs across 89 packages (no changes) [517.00ms]
+==> Uploading build...
+==> Uploaded in 2.9s. Compression took 0.8s
+==> Build successful 🎉
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Using Bun version 1.3.6 via /opt/render/project/src/.bun-version
+==> Docs on specifying a Bun version: https://render.com/docs/bun-version
+==> Running 'bun start'
+$ bun index.js
+ LOAD  Loaded message/automodMessageCreate.js
+ LOAD  Loaded message/starboardReactionRemove.js
+ LOAD  Loaded message/starboardReactionAdd.js
+ LOAD  Loaded guild/guildDelete.js
+ LOAD  Loaded guild/modmailInteraction.js
+ LOAD  Loaded guild/guildCreate.js
+ LOAD  Loaded guild/autoModerationActionExecution.js
+ LOAD  Loaded guild/messageDelete.js
+ LOAD  Loaded guild/voiceStateUpdate.js
+ LOAD  Loaded guild/interactionCreate.js
+ LOAD  Loaded guild/messageCreate.js
+ LOAD  Loaded client/ready.js
+ LOAD  Loaded interaction/giveawayButtonClick.js
+ LOAD  Loaded 285 prefix commands
+ LOAD  Loaded 58 slash commands
+ SLASH  Registering 58 global slash commands...
+ SLASH  Successfully registered 58 global slash commands
+ READY  Logged in as midnightz#7796
+ MUSIC  Connecting to Lavalink node(s)...
+ DASH  Dashboard running on port 10000
+ MUSIC  Node "Node 1" connected
+ ERROR  UNHANDLED REJECTION 37 |   if (!nodes || nodes.size === 0) return null;
+38 | 
+39 |   let best = null;
+40 |   let bestScore = Infinity;
+41 | 
+42 |   for (const [, node] of nodes) {
+       ^
+TypeError: {} is not iterable
+      at getBestNode (/opt/render/project/src/util/riffy.js:42:3)
+      at getBestNode (/opt/render/project/src/util/riffy.js:35:28)
+      at <anonymous> (/opt/render/project/src/util/riffy.js:92:24)
+      at <anonymous> (/opt/render/project/src/util/riffy.js:89:41)
+      at emit (node:events:95:22)
+      at message (/opt/render/project/src/node_modules/riffy/build/structures/Node.js:422:18)
+      at emit (node:events:98:22)
+      at <anonymous> (ws:193:22)
+ MUSIC  Node "Node 2" connected
+ ERROR  UNHANDLED REJECTION 37 |   if (!nodes || nodes.size === 0) return null;
+38 | 
+39 |   let best = null;
+40 |   let bestScore = Infinity;
+41 | 
+42 |   for (const [, node] of nodes) {
+       ^
+TypeError: {} is not iterable
+      at getBestNode (/opt/render/project/src/util/riffy.js:42:3)
+      at getBestNode (/opt/render/project/src/util/riffy.js:35:28)
+      at <anonymous> (/opt/render/project/src/util/riffy.js:92:24)
+      at <anonymous> (/opt/render/project/src/util/riffy.js:89:41)
+      at emit (node:events:95:22)
+      at message (/opt/render/project/src/node_modules/riffy/build/structures/Node.js:422:18)
+      at emit (node:events:98:22)
+      at <anonymous> (ws:193:22)
+ MUSIC  Node(s) connected — 3 available
+ MUSIC  Node "Node 3" connected
+ ERROR  UNHANDLED REJECTION 37 |   if (!nodes || nodes.size === 0) return null;
+38 | 
+39 |   let best = null;
+40 |   let bestScore = Infinity;
+41 | 
+42 |   for (const [, node] of nodes) {
+       ^
+TypeError: {} is not iterable
+      at getBestNode (/opt/render/project/src/util/riffy.js:42:3)
+      at getBestNode (/opt/render/project/src/util/riffy.js:35:28)
+      at <anonymous> (/opt/render/project/src/util/riffy.js:92:24)
+      at <anonymous> (/opt/render/project/src/util/riffy.js:89:41)
+      at emit (node:events:95:22)
+      at message (/opt/render/project/src/node_modules/riffy/build/structures/Node.js:422:18)
+      at emit (node:events:98:22)
+      at <anonymous> (ws:193:22)
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://dude-q8n7.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
