@@ -12,8 +12,8 @@ function parseNodes() {
   }
   return [
     {
-      host: process.env.LAVALINK_HOST || 'lavalink-2uju.onrender.com',
-      password: process.env.LAVALINK_PASSWORD || 'Lawda@2969',
+      host: process.env.LAVALINK_HOST || 'lavalink-f51k.onrender.com',
+      password: process.env.LAVALINK_PASSWORD || 'YourStrongPasswordHere',
       port: parseInt(process.env.LAVALINK_PORT || '443', 10),
       secure: process.env.LAVALINK_SECURE === 'true',
     },
@@ -27,7 +27,7 @@ const config = {
   ownerId: process.env.OWNER_ID,
   initialPrefix: process.env.INITIAL_PREFIX || ';',
   webhookUrl: process.env.WEBHOOK_URL,
-  dashboardUrl: process.env.DASHBOARD_URL || 'http://localhost:3000',
+  dashboardUrl: process.env.DASHBOARD_URL || 'https://dude-q8n7.onrender.com',
   defaultVolume: parseInt(process.env.DEFAULT_VOLUME || '60', 10),
   lavalink: parseNodes(),
 };
