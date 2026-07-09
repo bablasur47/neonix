@@ -12,22 +12,10 @@ function parseNodes() {
   }
   return [
     {
-      host: process.env.LAVALINK_HOST || '',
-      password: process.env.LAVALINK_PASSWORD || 'D',
-      port: parseInt(process.env.LAVALINK_PORT || '', 10),
-      secure: process.env.LAVALINK_SECURE === '',
-    },
-    {
-      host: process.env.LAVALINK_HOST_2 || '',
-      password: process.env.LAVALINK_PASSWORD_2 || '',
-      port: parseInt(process.env.LAVALINK_PORT_2 || '', 10),
-      secure: process.env.LAVALINK_SECURE_2 === '',
-    },
-    {
-      host: process.env.LAVALINK_HOST_3 || '',
-      password: process.env.LAVALINK_PASSWORD_3 || '',
-      port: parseInt(process.env.LAVALINK_PORT_3 || '', 10),
-      secure: process.env.LAVALINK_SECURE_3 === '',
+      host: process.env.LAVALINK_HOST || 'lavalink-2uju.onrender.com',
+      password: process.env.LAVALINK_PASSWORD || 'Lawda@2969',
+      port: parseInt(process.env.LAVALINK_PORT || '443', 10),
+      secure: process.env.LAVALINK_SECURE === 'true',
     },
   ];
 }
