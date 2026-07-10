@@ -12,10 +12,10 @@ function parseNodes() {
   }
   return [
     {
-      host: process.env.LAVALINK_HOST || 'lavalink-f51k.onrender.com',
-      password: process.env.LAVALINK_PASSWORD || 'slayer123',
-      port: parseInt(process.env.LAVALINK_PORT || '443', 10),
-      secure: process.env.LAVALINK_SECURE === 'true',
+      host: process.env.LAVALINK_HOST || 'lavalinkv4.serenetia.com',
+      password: process.env.LAVALINK_PASSWORD || 'https://seretia.link/discord',
+      port: parseInt(process.env.LAVALINK_PORT || '80', 10),
+      secure: process.env.LAVALINK_SECURE === 'false',
     },
   ];
 }
