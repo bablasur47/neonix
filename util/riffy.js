@@ -96,7 +96,8 @@ export function setupRiffy(client) {
   });
 
   client.riffy.on('nodeDisconnect', (node, reason) => {
-    log.warn(`Node "${node.name}" disconnected: ${reason || 'unknown'}`);
+    const msg = reason?.message || reason?.reason || (typeof reason === 'object' ? JSON.stringify(reason) : reason) || 'unknown';
+    log.warn(`Node "${node.name}" disconnected: ${msg}`);
   });
 
   client.riffy.on('nodeReconnect', (node) => {
