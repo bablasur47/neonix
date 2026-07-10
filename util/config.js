@@ -13,7 +13,7 @@ function parseNodes() {
   return [
     {
       host: process.env.LAVALINK_HOST || 'lavalink-f51k.onrender.com',
-      password: process.env.LAVALINK_PASSWORD || 'YourStrongPasswordHere',
+      password: process.env.LAVALINK_PASSWORD || 'slayer123',
       port: parseInt(process.env.LAVALINK_PORT || '443', 10),
       secure: process.env.LAVALINK_SECURE === 'true',
     },
