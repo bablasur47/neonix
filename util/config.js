@@ -13,7 +13,7 @@ function parseNodes() {
   return [
     {
       host: process.env.LAVALINK_HOST || 'lavalinkv4.serenetia.com',
-      password: process.env.LAVALINK_PASSWORD || 'https://dsc.gg/ajidevserver'
+      password: process.env.LAVALINK_PASSWORD || 'https://dsc.gg/ajidevserver',
       port: parseInt(process.env.LAVALINK_PORT || '443', 10),
       secure: process.env.LAVALINK_SECURE === 'true',
     },
