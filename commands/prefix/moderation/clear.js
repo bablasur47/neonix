@@ -109,8 +109,12 @@ export async function execute(message, args) {
 }
 
 async function bulkDelete(message, limit, filter) {
-  const fetched = await message.channel.messages.fetch({ limit });
-  const toDelete = fetched.filter(filter).first(100);
+  const fetched = await message.channel.messages.fetch({ limit: Math.min(limit + 1, 100) });
+  let toDelete = fetched.filter(filter).first(100);
+
+  if (!toDelete.find(m => m.id === message.id)) {
+    toDelete = [message, ...toDelete].slice(0, 100);
+  }
 
   if (!toDelete.length) {
     await reply(message, `${emojis.info} No messages to delete.`);

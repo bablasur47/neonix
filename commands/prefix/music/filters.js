@@ -98,6 +98,7 @@ export async function execute(message, args) {
   if (presets[sub]) {
     try {
       await presets[sub].apply(player);
+      player._filterPreset = sub;
       await reply(message, `${emojis.success} **${sub}** preset applied.`);
     } catch {
       await reply(message, `${emojis.error} Failed to apply **${sub}** preset.`);
@@ -138,6 +139,7 @@ export async function execute(message, args) {
 
   if (sub === 'clear') {
     await player.filters.clearFilters();
+    player._filterPreset = null;
     await reply(message, `${emojis.success} All filters cleared. Run \`filters clarity\` to re-enable quality enhancement.`);
     return;
   }

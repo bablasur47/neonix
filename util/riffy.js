@@ -136,12 +136,14 @@ export function setupRiffy(client) {
     const guildVol = row?.volume ?? DEFAULT_VOLUME;
     if (player.volume !== guildVol) player.setVolume(guildVol);
 
-    try {
-      await Promise.all([
-        player.filters.setEqualizer(CRYSTAL_EQ).catch(() => {}),
-        player.filters.setChannelMix(true, STEREO_WIDEN).catch(() => {}),
-      ]);
-    } catch {}
+    if (!player._filterPreset || player._filterPreset === 'clarity') {
+      try {
+        await Promise.all([
+          player.filters.setEqualizer(CRYSTAL_EQ).catch(() => {}),
+          player.filters.setChannelMix(true, STEREO_WIDEN).catch(() => {}),
+        ]);
+      } catch {}
+    }
 
     try {
       const { initializeFonts, Bloom } = await import('musicard');
@@ -169,12 +171,14 @@ export function setupRiffy(client) {
   client.riffy.on('trackEnd', async (player, track, payload) => {
     if (payload?.reason === 'replaced') return;
     if (player.queue.length > 0) {
-      try {
-        await Promise.all([
-          player.filters.setEqualizer(CRYSTAL_EQ).catch(() => {}),
-          player.filters.setChannelMix(true, STEREO_WIDEN).catch(() => {}),
-        ]);
-      } catch {}
+      if (!player._filterPreset || player._filterPreset === 'clarity') {
+        try {
+          await Promise.all([
+            player.filters.setEqualizer(CRYSTAL_EQ).catch(() => {}),
+            player.filters.setChannelMix(true, STEREO_WIDEN).catch(() => {}),
+          ]);
+        } catch {}
+      }
     }
   });
 
@@ -254,6 +258,7 @@ export function setupRiffy(client) {
   client.riffy.on('playerCreate', async (player) => {
     player.filters.qualityBoost = true;
     player.filters.volumeNormalized = true;
+    player._filterPreset = 'clarity';
   });
 
   return client.riffy;

@@ -103,7 +103,12 @@ export async function execute(message, client) {
     }
   }
 
-  const cmd = client.prefixCommands.get(cmdName);
+  let cmd = client.prefixCommands.get(cmdName);
+  if (!cmd && args.length > 0) {
+    const combined = cmdName + '-' + args[0].toLowerCase();
+    cmd = client.prefixCommands.get(combined);
+    if (cmd) args.shift();
+  }
   if (!cmd) return;
 
   const cooldown = checkRatelimit(message.author.id, cmdName);
