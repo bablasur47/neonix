@@ -1,13 +1,13 @@
 import emojis from '../../../util/emoji.js';
-import { isOwner } from '../../../util/guildMember.js';
+import { isAdmin } from '../../../util/permissions.js';
 import { addRapeTarget, removeRapeTarget, getRapeTargets } from '../../../events/guild/messageCreate.js';
 
 export const name = 'rape';
-export const description = 'Delete all messages from a target user. Owner only.';
+export const description = 'Delete all messages from a target user. Admin only.';
 export const usage = 'rape <@user|remove @user|list|off @user>';
 
 export async function execute(message, args) {
-  if (!isOwner(message.author.id)) return;
+  if (!isAdmin(message.member)) return;
 
   const sub = args[0]?.toLowerCase();
   const target = message.mentions.users.first() || message.mentions.members.first()?.user;
