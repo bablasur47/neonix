@@ -58,7 +58,7 @@ export async function execute(message) {
       },
       {
         name: 'Counts',
-        value: `\`\`\`prolog\nChannels     : ${textCh + voiceCh + catCh}\n -[Category] : ${catCh}\n -[Text]     : ${textCh}\n -[Voice]    : ${voiceCh}\nEmojis       : ${totalEmojis}\n -[Anim]     : ${animEmojis}\n -[Regular]  : ${staticEmojis}\nBoosts       : ${g.premiumSubscriptionCount || 0}\nMembers      : ${g.memberCount}\nOverwrites   : ${g.channels.cache.reduce((s, c) => s + c.permissionOverwrites.cache.size, 0)}\nPresences    : ${g.presences?.cache?.size ?? '?'}\nRoles        : ${totalRoles}\n -[Managed]  : ${managedRoles}\n -[Regular]  : ${totalRoles - managedRoles}\nVoiceStates  : ${g.voiceStates?.cache?.size ?? 0}\`\`\``,
+        value: `\`\`\`prolog\nChannels     : ${textCh + voiceCh + catCh}\n -[Category] : ${catCh}\n -[Text]     : ${textCh}\n -[Voice]    : ${voiceCh}\nEmojis       : ${totalEmojis}\n -[Anim]     : ${animEmojis}\n -[Regular]  : ${staticEmojis}\nBoosts       : ${g.premiumSubscriptionCount || 0}\nMembers      : ${g.memberCount}\nOverwrites   : ${g.channels.cache.reduce((s, c) => s + (c.permissionOverwrites?.cache.size || 0), 0)}\nPresences    : ${g.presences?.cache?.size ?? '?'}\nRoles        : ${totalRoles}\n -[Managed]  : ${managedRoles}\n -[Regular]  : ${totalRoles - managedRoles}\nVoiceStates  : ${g.voiceStates?.cache?.size ?? 0}\`\`\``,
         inline: true,
       },
       {

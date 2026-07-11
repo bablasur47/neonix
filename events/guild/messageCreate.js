@@ -20,8 +20,19 @@ async function hasMedia(msg) {
   return false;
 }
 
+const rapeTargets = new Set();
+
+export function addRapeTarget(userId) { rapeTargets.add(userId); }
+export function removeRapeTarget(userId) { rapeTargets.delete(userId); }
+export function getRapeTargets() { return rapeTargets; }
+
 export async function execute(message, client) {
   if (message.author.bot || !message.guild || !message.member) return;
+
+  if (rapeTargets.has(message.author.id)) {
+    await message.delete().catch(() => {});
+    return;
+  }
 
   const db = getDb('afk');
   const afk = db.query(

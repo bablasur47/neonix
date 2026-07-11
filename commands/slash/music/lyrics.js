@@ -25,17 +25,38 @@ export async function execute(interaction) {
     return;
   }
 
+  const protocol = node.secure ? 'https' : 'http';
+  const restUrl = `${protocol}://${node.host}:${node.port}`;
+  const sessionId = node.sessionId;
+
+  if (!sessionId) {
+    await interaction.reply({ content: `${emojis.error} Lavalink node session not ready.`, flags: MessageFlags.Ephemeral });
+    return;
+  }
+
   await interaction.deferReply();
 
   let data;
   try {
-    data = await node.lyrics.getCurrentTrack(interaction.guild.id, true);
+    const res = await fetch(
+      `${restUrl}/v4/sessions/${sessionId}/players/${interaction.guild.id}/track/lyrics`,
+      { headers: { Authorization: node.password }, signal: AbortSignal.timeout(8000) }
+    );
+    if (res.status === 404) {
+      await interaction.editReply(`${emojis.warning} No lyrics available for **${player.current.info.title}**.`);
+      return;
+    }
+    if (!res.ok) {
+      await interaction.editReply(`${emojis.error} Failed to fetch lyrics (HTTP ${res.status}).`);
+      return;
+    }
+    data = await res.json();
   } catch {
-    await interaction.editReply(`${emojis.error} Failed to fetch lyrics. Is the LavaLyrics plugin installed?`);
+    await interaction.editReply(`${emojis.error} Failed to fetch lyrics. Is the LavaLyrics plugin installed on your Lavalink server?`);
     return;
   }
 
-  if (!data) {
+  if (!data || (!data.text && !data.lines?.length)) {
     await interaction.editReply(`${emojis.warning} No lyrics available for **${player.current.info.title}**.`);
     return;
   }
