@@ -128,6 +128,7 @@ export function setupRiffy(client) {
   });
 
   client.riffy.on('trackStart', async (player, track) => {
+    if (player._idleTimeout) { clearTimeout(player._idleTimeout); player._idleTimeout = null; }
     const channel = client.channels.cache.get(player.textChannel);
     if (!channel) return;
 
@@ -223,6 +224,8 @@ export function setupRiffy(client) {
   }
 
   client.riffy.on('queueEnd', async (player) => {
+    if (player._idleTimeout) clearTimeout(player._idleTimeout);
+
     if (player.isAutoplay) {
       try {
         await player.autoplay(player);
@@ -233,12 +236,20 @@ export function setupRiffy(client) {
           ]);
         } catch {}
       } catch {
-        if (!is247(player.guildId)) player.destroy();
+        if (!is247(player.guildId)) scheduleIdleDestroy(player);
       }
-    } else {
-      if (!is247(player.guildId)) player.destroy();
+    } else if (!is247(player.guildId)) {
+      scheduleIdleDestroy(player);
     }
   });
+
+  function scheduleIdleDestroy(player) {
+    player._idleTimeout = setTimeout(() => {
+      try {
+        if (!player.playing && !player.paused && !player.queue.length) player.destroy();
+      } catch {}
+    }, 180000);
+  }
 
   client.riffy.on('playerDisconnect', () => {});
 

@@ -28,7 +28,7 @@ export async function execute(message, args) {
 
   let data;
   try {
-    data = await node.lyrics.getCurrentTrack(message.guild.id);
+    data = await node.lyrics.getCurrentTrack(message.guild.id, true);
   } catch {
     await message.reply(`${emojis.error} Failed to fetch lyrics. Is the LavaLyrics plugin installed?`);
     return;
@@ -40,11 +40,17 @@ export async function execute(message, args) {
   }
 
   const track = player.current;
-  const lines = data.lines;
-  const hasTimestamps = lines?.length > 0 && lines.some(l => l.timestamp != null);
+  const rawLines = data.lines;
+  const isStringArray = rawLines?.length > 0 && typeof rawLines[0] === 'string';
+
+  const lines = isStringArray
+    ? rawLines.map(l => ({ line: l, timestamp: null }))
+    : rawLines || [];
+
+  const hasTimestamps = lines.some(l => l.timestamp != null);
 
   if (!hasTimestamps) {
-    const text = data.text || lines?.map(l => l.line).join('\n');
+    const text = data.text || lines.map(l => l.line).join('\n');
     if (!text) {
       await message.reply(`${emojis.warning} No lyrics available for **${track.info.title}**.`);
       return;
