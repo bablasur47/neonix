@@ -53,7 +53,7 @@ export async function execute(interaction) {
     const embed = new EmbedBuilder()
       .setColor(0x2B2D31)
       .setTitle(`${track.info.title} — ${track.info.author}`)
-      .setThumbnail(track.info.thumbnail || track.info.artworkUrl || null)
+      .setThumbnail(typeof track.info.thumbnail === 'string' ? track.info.thumbnail : (typeof track.info.artworkUrl === 'string' ? track.info.artworkUrl : null))
       .setDescription(text.slice(0, 4096))
       .setFooter({ text: `Source: ${data.sourceName || 'Unknown'} (unsynced)` });
     await interaction.editReply({ embeds: [embed] });
@@ -105,7 +105,7 @@ function makeLyricsEmbed(track, lines, activeIdx, sourceName) {
     .setColor(0x2B2D31)
     .setTitle(`${track.info.title} — ${track.info.author}`)
     .setURL(track.info.uri || null)
-    .setThumbnail(track.info.thumbnail || track.info.artworkUrl || null)
+    .setThumbnail(typeof track.info.thumbnail === 'string' ? track.info.thumbnail : (typeof track.info.artworkUrl === 'string' ? track.info.artworkUrl : null))
     .setDescription(desc || 'No lyrics lines.')
     .setFooter({ text: `Source: ${sourceName || 'Unknown'}${progress ? ` • ${progress}` : ''}` });
 }
