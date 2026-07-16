@@ -195,7 +195,8 @@ async function fetchGenerated(apiUrl) {
     return { url };
   }
   if (!ct.startsWith('image/')) throw new Error(`unexpected content-type ${ct}`);
-  return { buffer: Buffer.from(await res.arrayBuffer()) };
+  const ext = ct.includes('gif') ? 'gif' : ct.includes('jpeg') ? 'jpg' : 'png';
+  return { buffer: Buffer.from(await res.arrayBuffer()), ext };
 }
 
 // Generic meme generator. The urlTemplate may contain placeholders:
@@ -219,14 +220,15 @@ export function memeCmd(type, urlTemplate, opts = {}) {
         const first = mentions.length > 1 ? mentions[0] : message.author;
         const second = mentions.length > 1 ? mentions[1] : mentions[0];
         url = url
-          .replace('{avatar}', encodeURIComponent(avatarOf(first)))
-          .replace('{avatar2}', encodeURIComponent(avatarOf(second)));
+          .replaceAll('{avatar}', encodeURIComponent(avatarOf(first)))
+          .replaceAll('{avatar2}', encodeURIComponent(avatarOf(second)));
       } else if (url.includes('{avatar}')) {
         target = await resolveTarget(message, args, client);
-        url = url.replace('{avatar}', encodeURIComponent(avatarOf(target)));
+        url = url.replaceAll('{avatar}', encodeURIComponent(avatarOf(target)));
       }
       if (url.includes('{username}')) {
-        url = url.replace('{username}', encodeURIComponent((target || message.author).username));
+        if (!target) target = await resolveTarget(message, args, client);
+        url = url.replaceAll('{username}', encodeURIComponent(target.username));
       }
 
       if (url.includes('{text')) {
@@ -253,7 +255,7 @@ export function memeCmd(type, urlTemplate, opts = {}) {
       const embed = baseEmbed(message, opts.title || title(type));
       const payload = { embeds: [embed] };
       if (result.buffer) {
-        const fileName = `${type}.png`;
+        const fileName = `${type}.${result.ext || 'png'}`;
         embed.setImage(`attachment://${fileName}`);
         payload.files = [{ attachment: result.buffer, name: fileName }];
       } else {

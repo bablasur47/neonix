@@ -32,15 +32,18 @@ const STEREO_WIDEN = {
   rightToRight: 0.70,
 };
 
-async function getBestNode(riffy) {
-  const nodes = riffy.nodeMap;
-  if (!nodes || nodes.size === 0) return null;
+function getBestNode(riffy) {
+  // nodeMap should be a Map, but be defensive — iterating a plain object
+  // here previously crashed with "TypeError: {} is not iterable"
+  const map = riffy?.nodeMap;
+  const nodes = map instanceof Map ? [...map.values()] : Object.values(map || {});
+  if (nodes.length === 0) return null;
 
   let best = null;
   let bestScore = Infinity;
 
-  for (const [, node] of nodes) {
-    if (node.state !== 1) continue;
+  for (const node of nodes) {
+    if (!node?.connected) continue;
     const stats = node.stats;
     if (!stats) { best = best || node; continue; }
 
@@ -48,7 +51,7 @@ async function getBestNode(riffy) {
     const mem = stats.memory?.used || 0;
     const memMax = stats.memory?.reservable || 1;
     const load = (cpu / 100) * 0.4 + (mem / memMax) * 0.3 + (stats.players || 0) * 0.3;
-    const score = stats.penalties?.total || 0 + load * 100;
+    const score = (stats.penalties?.total || 0) + load * 100;
 
     if (score < bestScore) {
       bestScore = score;
@@ -56,7 +59,7 @@ async function getBestNode(riffy) {
     }
   }
 
-  return best || riffy.nodeMap.values().next().value;
+  return best || nodes[0] || null;
 }
 
 export function setupRiffy(client) {
@@ -86,12 +89,16 @@ export function setupRiffy(client) {
     client.riffy.updateVoiceState(d);
   });
 
-  client.riffy.on('nodeConnect', async (node) => {
+  client.riffy.on('nodeConnect', (node) => {
     log.music(`Node "${node.name}" connected`);
 
-    const best = await getBestNode(client.riffy);
-    if (best && best.name !== node.name) {
-      log.music(`Better node available: "${best.name}", staying on "${node.name}" for now`);
+    try {
+      const best = getBestNode(client.riffy);
+      if (best && best.name !== node.name) {
+        log.music(`Better node available: "${best.name}", staying on "${node.name}" for now`);
+      }
+    } catch (err) {
+      log.warn(`getBestNode failed: ${err.message}`);
     }
   });
 
