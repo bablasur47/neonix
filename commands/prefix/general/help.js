@@ -14,6 +14,7 @@ const CATEGORY_EMOJI = {
   giveaways: emojis.gift,
   extra: emojis.queue,
   fun: emojis.info,
+  memes: '😂',
   social: emojis.info,
   starboard: emojis.star,
   modmail: emojis.modmail,
@@ -30,6 +31,7 @@ const CATEGORY_LABELS = {
   giveaways: 'Giveaways',
   extra: 'Extra',
   fun: 'Fun',
+  memes: 'Memes',
   social: 'Social',
   starboard: 'Starboard',
   modmail: 'Modmail',
@@ -39,7 +41,7 @@ const CATEGORY_LABELS = {
 
 const USAGE_NOTE = '```r\n<> = required\n[ ] = optional\n```';
 
-const CATEGORY_ORDER = ['general', 'moderation', 'automod', 'music', 'voice', 'voicemaster', 'giveaways', 'extra', 'fun', 'social', 'starboard', 'modmail', 'owner'];
+const CATEGORY_ORDER = ['general', 'moderation', 'automod', 'music', 'voice', 'voicemaster', 'giveaways', 'extra', 'fun', 'memes', 'social', 'starboard', 'modmail', 'owner'];
 
 export async function execute(message, args) {
   const cmds = message.client.prefixCommands;

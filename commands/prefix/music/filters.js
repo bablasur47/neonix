@@ -2,7 +2,7 @@ import { reply } from '../../../util/components.js';
 import emojis from '../../../util/emoji.js';
 import config from '../../../util/config.js';
 
-const DEFAULT_VOLUME = config.defaultVolume || 65;
+const DEFAULT_VOLUME = config.defaultVolume || 100;
 
 const CRYSTAL_EQ = [
   { band: 0, gain: 0.0 }, { band: 1, gain: 0.04 }, { band: 2, gain: 0.06 },
@@ -19,7 +19,7 @@ export const usage = 'filters <preset|subcommand>';
 
 const presets = {
   clarity: {
-    desc: 'Crystal-clean preset (default) — cuts mud, clear vocals, airy highs',
+    desc: 'V-shaped EQ — scooped mids, boosted lows/highs',
     apply: async (p) => {
       await p.filters.setEqualizer(CRYSTAL_EQ).catch(() => {});
       await p.filters.setChannelMix(true, { leftToLeft: 0.70, leftToRight: 0.30, rightToLeft: 0.30, rightToRight: 0.70 }).catch(() => {});
@@ -79,7 +79,7 @@ export async function execute(message, args) {
   const sub = args[0]?.toLowerCase();
 
   if (!sub || sub === 'list') {
-    let list = `${emojis.info} **Sound Presets:**\n`;
+    let list = `${emojis.info} By default no filters are active — audio streams untouched at full quality. Filters re-process the sound, so only enable them if you want their effect.\n\n**Sound Presets:**\n`;
     for (const [name, p] of Object.entries(presets)) {
       list += `\`${name}\` — ${p.desc}\n`;
     }
@@ -89,7 +89,8 @@ export async function execute(message, args) {
   }
 
   if (sub === 'volume') {
-    const vol = Math.min(Math.max(parseInt(args[1]) || DEFAULT_VOLUME, 0), 200);
+    // Cap at 100: Lavalink amplifies digitally above 100%, which clips and distorts
+    const vol = Math.min(Math.max(parseInt(args[1]) || DEFAULT_VOLUME, 0), 100);
     player.setVolume(vol);
     await reply(message, `${emojis.volume} Volume set to **${vol}%**.`);
     return;
@@ -140,7 +141,7 @@ export async function execute(message, args) {
   if (sub === 'clear') {
     await player.filters.clearFilters();
     player._filterPreset = null;
-    await reply(message, `${emojis.success} All filters cleared. Run \`filters clarity\` to re-enable quality enhancement.`);
+    await reply(message, `${emojis.success} All filters cleared — back to pure, unprocessed audio (best quality).`);
     return;
   }
 

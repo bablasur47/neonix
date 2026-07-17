@@ -28,7 +28,7 @@ const config = {
   initialPrefix: process.env.INITIAL_PREFIX || ';',
   webhookUrl: process.env.WEBHOOK_URL,
   dashboardUrl: process.env.DASHBOARD_URL || 'https://dude-q8n7.onrender.com',
-  defaultVolume: parseInt(process.env.DEFAULT_VOLUME || '60', 10),
+  defaultVolume: parseInt(process.env.DEFAULT_VOLUME || '100', 10),
   lavalink: parseNodes(),
 };
 

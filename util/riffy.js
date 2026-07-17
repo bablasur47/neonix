@@ -4,33 +4,10 @@ import log from './console.js';
 import { getDb } from '../database/index.js';
 import emojis from './emoji.js';
 
-const DEFAULT_VOLUME = 65;
+// Volume 100 + no filters lets Lavalink pass the source Opus frames through
+// without re-encoding — anything else forces a lossy decode/encode cycle.
+const DEFAULT_VOLUME = 100;
 const DEFAULT_SEARCH = 'ytmsearch';
-
-const CRYSTAL_EQ = [
-  { band: 0,  gain: 0.0  },
-  { band: 1,  gain: 0.04 },
-  { band: 2,  gain: 0.06 },
-  { band: 3,  gain: 0.02 },
-  { band: 4,  gain: -0.05 },
-  { band: 5,  gain: -0.10 },
-  { band: 6,  gain: -0.12 },
-  { band: 7,  gain: -0.08 },
-  { band: 8,  gain: 0.0  },
-  { band: 9,  gain: 0.05 },
-  { band: 10, gain: 0.08 },
-  { band: 11, gain: 0.06 },
-  { band: 12, gain: 0.04 },
-  { band: 13, gain: 0.02 },
-  { band: 14, gain: -0.02 },
-];
-
-const STEREO_WIDEN = {
-  leftToLeft: 0.70,
-  leftToRight: 0.30,
-  rightToLeft: 0.30,
-  rightToRight: 0.70,
-};
 
 function getBestNode(riffy) {
   // nodeMap should be a Map, but be defensive — iterating a plain object
@@ -144,15 +121,6 @@ export function setupRiffy(client) {
     const guildVol = row?.volume ?? DEFAULT_VOLUME;
     if (player.volume !== guildVol) player.setVolume(guildVol);
 
-    if (!player._filterPreset || player._filterPreset === 'clarity') {
-      try {
-        await Promise.all([
-          player.filters.setEqualizer(CRYSTAL_EQ).catch(() => {}),
-          player.filters.setChannelMix(true, STEREO_WIDEN).catch(() => {}),
-        ]);
-      } catch {}
-    }
-
     try {
       const { initializeFonts, Bloom } = await import('musicard');
       await initializeFonts();
@@ -173,20 +141,6 @@ export function setupRiffy(client) {
     } catch {
       const icon = track.info.isStream ? '🔴' : '🎵';
       await channel.send(`${icon} **${track.info.title}** — ${track.info.author} (\`${track.info.isStream ? 'LIVE' : formatTime(track.info.length)}\`)`);
-    }
-  });
-
-  client.riffy.on('trackEnd', async (player, track, payload) => {
-    if (payload?.reason === 'replaced') return;
-    if (player.queue.length > 0) {
-      if (!player._filterPreset || player._filterPreset === 'clarity') {
-        try {
-          await Promise.all([
-            player.filters.setEqualizer(CRYSTAL_EQ).catch(() => {}),
-            player.filters.setChannelMix(true, STEREO_WIDEN).catch(() => {}),
-          ]);
-        } catch {}
-      }
     }
   });
 
@@ -236,12 +190,6 @@ export function setupRiffy(client) {
     if (player.isAutoplay) {
       try {
         await player.autoplay(player);
-        try {
-          await Promise.all([
-            player.filters.setEqualizer(CRYSTAL_EQ).catch(() => {}),
-            player.filters.setChannelMix(true, STEREO_WIDEN).catch(() => {}),
-          ]);
-        } catch {}
       } catch {
         if (!is247(player.guildId)) scheduleIdleDestroy(player);
       }
@@ -274,9 +222,8 @@ export function setupRiffy(client) {
   });
 
   client.riffy.on('playerCreate', async (player) => {
-    player.filters.qualityBoost = true;
-    player.filters.volumeNormalized = true;
-    player._filterPreset = 'clarity';
+    // No default filters: an untouched filter chain keeps Opus passthrough active.
+    player._filterPreset = null;
   });
 
   return client.riffy;

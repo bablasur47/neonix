@@ -81,18 +81,6 @@ export async function execute(interaction) {
     }
     try {
       await player.play();
-      try {
-        await Promise.all([
-          player.filters.setEqualizer([
-            { band: 0, gain: 0.0 }, { band: 1, gain: 0.04 }, { band: 2, gain: 0.06 },
-            { band: 3, gain: 0.02 }, { band: 4, gain: -0.05 }, { band: 5, gain: -0.10 },
-            { band: 6, gain: -0.12 }, { band: 7, gain: -0.08 }, { band: 8, gain: 0.0 },
-            { band: 9, gain: 0.05 }, { band: 10, gain: 0.08 }, { band: 11, gain: 0.06 },
-            { band: 12, gain: 0.04 }, { band: 13, gain: 0.02 }, { band: 14, gain: -0.02 }
-          ]).catch(() => {}),
-          player.filters.setChannelMix(true, { leftToLeft: 0.70, leftToRight: 0.30, rightToLeft: 0.30, rightToRight: 0.70 }).catch(() => {}),
-        ]);
-      } catch {}
     } catch {
       if (player.queue.length === 0) player.queue.add(track);
       await new Promise(r => setTimeout(r, 500));

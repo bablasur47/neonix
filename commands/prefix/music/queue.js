@@ -8,8 +8,15 @@ const ACCENT = 0x2B2D31;
 
 export const name = 'queue';
 export const aliases = ['q'];
-export const description = 'Show the current music queue';
-export const usage = 'queue';
+export const description = 'Show the current music queue, or move a track to a new position';
+export const usage = 'queue [move <from> <to>]';
+
+export function moveTrack(player, from, to) {
+  const idx = from - 1;
+  const [track] = player.queue.splice(idx, 1);
+  player.queue.splice(to - 1, 0, track);
+  return track;
+}
 
 function buildQueueEmbed(player, page) {
   const current = player.current;
@@ -79,7 +86,7 @@ function buildNavComponents(player, page) {
   return rows;
 }
 
-export async function execute(message) {
+export async function execute(message, args = []) {
   if (!message.client.riffy) {
     await reply(message, `${emojis.error} Music system is not connected.`);
     return;
@@ -87,6 +94,25 @@ export async function execute(message) {
   const player = message.client.riffy.players.get(message.guild.id);
   if (!player) {
     await reply(message, `${emojis.error} No music is playing.`);
+    return;
+  }
+
+  // "queue move <from> <to>" (or just "queue <from> <to>") — reorder without the menu
+  const nums = (args[0]?.toLowerCase() === 'move' || args[0]?.toLowerCase() === 'mv') ? args.slice(1) : args;
+  if (nums.length >= 2) {
+    const from = parseInt(nums[0]);
+    const to = parseInt(nums[1]);
+    const len = player.queue.length;
+    if (isNaN(from) || isNaN(to) || from < 1 || to < 1 || from > len || to > len) {
+      await reply(message, `${emojis.warning} Usage: \`queue move <from> <to>\` — positions must be between 1 and ${len || '?'}.`);
+      return;
+    }
+    if (from === to) {
+      await reply(message, `${emojis.warning} That track is already at position **#${to}**.`);
+      return;
+    }
+    const track = moveTrack(player, from, to);
+    await reply(message, `${emojis.success} Moved **${track?.info?.title || 'Unknown'}** from **#${from}** to **#${to}**.`);
     return;
   }
 
