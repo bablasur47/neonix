@@ -37,7 +37,7 @@ const FALLBACKS = {
   tickle: ['nekosbest', 'https://nekos.best/api/v2/tickle'],
   cuddle: ['nekosbest', 'https://nekos.best/api/v2/cuddle'],
   kill: ['nekobot', 'https://nekobot.xyz/api/image?type=hentai'],
-  fuck: ['nekobot', 'https://nekobot.xyz/api/image?type=hentai'],
+  fuck: ['purrbot', 'https://purrbot.site/api/img/nsfw/anal/gif'],
   bite: ['nekosbest', 'https://nekos.best/api/v2/bite'],
   blush: ['nekosbest', 'https://nekos.best/api/v2/blush'],
   cry: ['nekosbest', 'https://nekos.best/api/v2/cry'],
